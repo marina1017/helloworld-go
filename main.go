@@ -10,7 +10,8 @@ func main() {
     if err!=nil{
         panic(err)
     }
-    //Write が受け取るのは文字列ではなくてバイト列
+    //Write が受け取るのは文字列ではなくてバイト列だからバイト列に変換
+    //定義　func (f *File) Write(b []byte) (n int, err error) {
     file.Write([]byte("os.File example\n"))
     file.Close()
 }
