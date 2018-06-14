@@ -1,13 +1,17 @@
 package main
 
 import(
-	"net/http"
+	"compress/gzip"
+	"os"
 )
 
-func handler(w http.ResponseWriter, r*http.Request){
-	w.Write([]byte("http.ResponseWriter sample"))
-}
 func main() {
-	http.HandleFunc("/",handler)
-	http.ListenAndServe(":8080",nil)
+	file, err := os.Create("test.txt.gz")
+	if err != nil {
+		panic(err)
+	}
+	writer := gzip.NewWriter(file)
+	writer.Header.Name = "text.txt"
+	writer.Write([]byte("gzip.Writer example\n"))
+	writer.Close()
 }
