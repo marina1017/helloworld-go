@@ -1,15 +1,19 @@
 package main
 
 import(
+	"fmt"
+	"io"
 	"os"
-	"encoding/json"
 )
 
 func main() {
-	encoder := json.NewEncoder(os.Stdout)
-	encoder.SetIndent(""," ")
-	encoder.Encode(map[string]string{
-		"example":"encoding/json",
-		"hello":"world",
-	})
+	for {
+		buffer := make([]byte, 5)
+		size, err := os.Stdin.Read(buffer)
+		if err == io.EOF {
+			fmt.Println("EOF")
+			break
+		}
+			fmt.Printf("size=%d input='%s'\n", size, string(buffer))
+	}
 }
