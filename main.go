@@ -1,17 +1,24 @@
 package main
 
 import(
+	"bufio"
+	"fmt"
 	"io"
+	"net"
+	"net/http"
 	"os"
 )
 
 func main() {
-	file, err := os.Open("text.txt")
+	conn, err := net.Dial("tcp", "ascii.jp:80")
 	if err != nil {
 		panic(err)
 	}
-	//「確実に行う後処理」を実行するのに便利な仕組み
-	//defer は、現在のスコープが終了したら、その後ろに書かれている行の処理を実行する
-	defer file.Close()
-	io.Copy(os.Stdout, file)
+	conn.Write([]byte("GET / HTTP/1.0\r\nHost: ascii.jp\r\n\r\n"))
+	res, err := http.ReadResponse(bufio.NewReader(conn),nil)
+	//ヘッダーを表示してみる
+	fmt.Println(res.Header)
+	//ボディを表示してみる　最後にはClose()すること
+	defer res.Body.Close()
+	io.Copy(os.Stdout, res.Body)
 }
