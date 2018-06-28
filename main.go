@@ -1,15 +1,16 @@
 package main
 
 import(
-	"io"
-	"os"
-	"strings"
+	"bytes"
+	"encoding/binary"
+	"fmt"
 )
 
 func main() {
-	reader := strings.NewReader("Example of io.SectionReader\n")
-	//Section の部分だけを切り出した Reader をまず作成し
-	sectionReader := io.NewSectionReader(reader, 14, 7)
-	//それをすべて os.Stdout に書き出しています
-	io.Copy(os.Stdout, sectionReader)
+	//32ビットのっビッグエンディアンのでーた(10000)
+	data := []byte{0x0,0x0,0x27,0x10}
+	var i int32
+	//エンディアンの変換
+	binary.Read(bytes.NewReader(data),binary.BigEndian,&i)
+	fmt.Printf("data: %d",i)
 }
